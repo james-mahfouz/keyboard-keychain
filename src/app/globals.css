@@ -1,3 +1,12 @@
+/* Updated: 2025-11-30T09:09:27.603Z */
+/* Updated: 2025-11-30T09:08:46.377Z */
+/* Updated: 2025-11-30T09:06:58.697Z */
+/* Updated: 2025-11-30T09:05:17.614Z */
+/* Updated: 2025-11-28T17:14:14.309Z */
+/* Updated: 2025-11-28T15:44:47.764Z */
+/* Updated: 2025-11-28T14:41:52.998Z */
+/* Updated: 2025-11-28T08:00:08.318Z */
+/* Updated: 2025-11-27T18:00:02.343Z */
 /* Updated: 2025-11-27T09:50:10.376Z */
 /* Updated: 2025-11-27T05:39:07.720Z */
 /* Updated: 2025-11-27T05:36:23.528Z */
@@ -213,6 +222,11 @@
   @keyframes pulse-glow {
     0%, 100% { opacity: 0.3; filter: brightness(1); }
     50% { opacity: 0.6; filter: brightness(1.5); }
+  }
+
+  @keyframes snowfall {
+    0% { transform: translateY(-20px) rotate(0deg); }
+    100% { transform: translateY(100vh) rotate(360deg); }
   }
 
   .animate-float {

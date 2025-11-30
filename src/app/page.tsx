@@ -7,14 +7,32 @@ import { Card } from '@/components/ui/card';
 import { CartButton } from '@/components/CartButton';
 import { useCart } from '@/components/CartProvider';
 import { useState, useEffect } from 'react';
+import { authClient, useSession } from '@/lib/auth-client';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import Link from 'next/link';
 
 export default function Home() {
   const { addToCart } = useCart();
+  const { data: session, isPending, refetch } = useSession();
+  const router = useRouter();
   const [gameScore, setGameScore] = useState(0);
   const [pressedKey, setPressedKey] = useState<string | null>(null);
   const [lightningFlash, setLightningFlash] = useState(false);
 
   const keys = ['W', 'A', 'S', 'D'];
+
+  const handleSignOut = async () => {
+    const { error } = await authClient.signOut();
+    if (error?.code) {
+      toast.error(error.code);
+    } else {
+      localStorage.removeItem("bearer_token");
+      refetch();
+      toast.success("🎄 Logged out successfully!");
+      router.push("/");
+    }
+  };
 
   const handleKeyPress = (key: string) => {
     setPressedKey(key);
@@ -92,14 +110,6 @@ export default function Home() {
     <div className="relative min-h-screen bg-white text-[#1a2744]">
       <PixelBackground />
       
-      {/* Christmas decoration styles */}
-      <style jsx global>{`
-        @keyframes snowfall {
-          0% { transform: translateY(-20px) rotate(0deg); }
-          100% { transform: translateY(100vh) rotate(360deg); }
-        }
-      `}</style>
-      
       {/* Header */}
       <header className="relative z-10 border-b-4 border-[#1a2744] bg-white">
         <div className="container mx-auto px-4 py-6 flex justify-between items-center">
@@ -108,10 +118,37 @@ export default function Home() {
             <span className="text-lg">🎄</span>
           </div>
           <div className="flex items-center gap-4">
-            <nav className="flex gap-4">
+            <nav className="flex gap-4 items-center">
               <a href="#features" className="text-xs md:text-sm hover:text-[#cc0000] transition-colors">FEATURES</a>
               <a href="#products" className="text-xs md:text-sm hover:text-[#cc0000] transition-colors">PRODUCTS</a>
               <a href="#specs" className="text-xs md:text-sm hover:text-[#cc0000] transition-colors">SPECS</a>
+              
+              {!isPending && (
+                <>
+                  {session?.user ? (
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs hidden sm:inline">
+                        👋 {session.user.name}
+                      </span>
+                      <button
+                        onClick={handleSignOut}
+                        className="text-xs text-[#cc0000] hover:underline"
+                      >
+                        LOGOUT
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <Link href="/login" className="text-xs md:text-sm hover:text-[#cc0000] transition-colors">
+                        LOGIN
+                      </Link>
+                      <Link href="/register" className="text-xs md:text-sm hover:text-[#cc0000] transition-colors">
+                        REGISTER
+                      </Link>
+                    </>
+                  )}
+                </>
+              )}
             </nav>
             <CartButton />
           </div>
