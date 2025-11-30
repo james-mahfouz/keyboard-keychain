@@ -12,6 +12,17 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import Link from 'next/link';
 
+interface Product {
+  id: number;
+  name: string;
+  price: string;
+  priceValue: number;
+  color: string;
+  switches: string;
+  lights: string;
+  image: string;
+}
+
 export default function Home() {
   const { addToCart } = useCart();
   const { data: session, isPending, refetch } = useSession();
@@ -19,8 +30,35 @@ export default function Home() {
   const [gameScore, setGameScore] = useState(0);
   const [pressedKey, setPressedKey] = useState<string | null>(null);
   const [lightningFlash, setLightningFlash] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [productsLoading, setProductsLoading] = useState(true);
+  const [productsError, setProductsError] = useState<string | null>(null);
 
   const keys = ['W', 'A', 'S', 'D'];
+
+  // Fetch products from API
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setProductsLoading(true);
+        const response = await fetch('/api/products');
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
+        const data = await response.json();
+        setProducts(data);
+        setProductsError(null);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        setProductsError('Failed to load products. Please refresh the page.');
+        toast.error('Failed to load products');
+      } finally {
+        setProductsLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const handleSignOut = async () => {
     const { error } = await authClient.signOut();
@@ -215,98 +253,87 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Products Section */}
+      {/* Products Section - Now Dynamic */}
       <section id="products" className="relative z-10 container mx-auto px-4 py-16">
         <h3 className="text-3xl md:text-4xl text-center mb-12 text-[#cc0000]">
           OUR PRODUCTS 🎁
         </h3>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
-          {[
-          {
-            id: 1,
-            name: 'CLASSIC WASD',
-            price: '$5.97',
-            color: 'Clear & Cream',
-            switches: 'Light Sound (4 colors available)',
-            lights: 'With & Without Lights',
-            image: 'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/Generated-Image-November-18-2025-11_59PM-1763504359428.png'
-          },
-          {
-            id: 2,
-            name: 'STEALTH EDITION',
-            price: '$5.97',
-            color: 'Smoke & Black',
-            switches: 'Light Sound (4 colors available)',
-            lights: 'With & Without Lights',
-            image: 'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/Generated-Image-November-18-2025-11_36PM-1763504359353.png'
-          },
-          {
-            id: 3,
-            name: 'RGB GAMER',
-            price: '$5.97',
-            color: 'Clear & Blue',
-            switches: 'Clicky & Loud (4 colors available)',
-            lights: 'With & Without Lights',
-            image: 'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/Generated-Image-November-18-2025-11_29PM-1763504359576.png'
-          },
-          {
-            id: 4,
-            name: 'CRYSTAL PRO',
-            price: '$5.97',
-            color: 'Crystal Clear',
-            switches: 'Light Sound (4 colors available)',
-            lights: 'With & Without Lights',
-            image: 'https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/document-uploads/Generated-Image-November-18-2025-11_28PM-1763504359521.png'
-          }].
-          map((product, index) =>
-          <div
-            key={index}
-            className="bg-white border-4 border-[#1a2744] p-6 pixel-border hover:translate-y-[-8px] hover:shadow-[12px_12px_0px_rgba(26,39,68,1)] transition-all duration-300 group cursor-pointer">
-
-              <div className="mb-4 h-48 flex items-center justify-center bg-white relative overflow-hidden border-2 border-[#1a2744]">
-                <img
-                src={product.image}
-                alt={product.name}
-                className="object-contain w-full h-[180px] max-w-full relative z-10 group-hover:scale-110 transition-transform duration-300"
-                style={{ imageRendering: 'pixelated' }} />
-
-              </div>
-              <h4 className="text-base text-[#cc0000] mb-4 text-center group-hover:animate-pulse break-words">{product.name}</h4>
-              <div className="space-y-2 text-xs mb-6 overflow-hidden">
-                <div className="border-b-2 border-dashed border-[#1a2744] pb-2">
-                  <p className="text-[#cc0000] mb-1 font-bold">COLOR:</p>
-                  <p className="break-words leading-relaxed">{product.color}</p>
-                </div>
-                <div className="border-b-2 border-dashed border-[#1a2744] pb-2">
-                  <p className="text-[#cc0000] mb-1 font-bold">SWITCHES:</p>
-                  <p className="break-words leading-relaxed">{product.switches}</p>
-                </div>
-                <div className="border-b-2 border-dashed border-[#1a2744] pb-2">
-                  <p className="text-[#cc0000] mb-1 font-bold">LIGHTS:</p>
-                  <p className="break-words leading-relaxed">{product.lights}</p>
-                </div>
-              </div>
-              <div className="text-center mb-4">
-                <div className="text-2xl text-[#cc0000] font-bold group-hover:scale-110 transition-transform duration-300 inline-block">{product.price}</div>
-              </div>
-              <button 
-                onClick={() => addToCart({
-                  id: product.id,
-                  name: product.name,
-                  price: product.price,
-                  priceValue: 5.97,
-                  image: product.image,
-                  color: product.color,
-                  switches: product.switches,
-                  lights: product.lights
-                })}
-                className="pixel-button bg-[#cc0000] text-white px-6 py-3 text-xs w-full group-hover:bg-[#1a2744] transition-colors duration-300">
-                ADD TO CART
+        {productsLoading ? (
+          <div className="flex justify-center items-center py-16">
+            <div className="text-center space-y-4">
+              <div className="animate-pulse text-4xl">🎄</div>
+              <p className="text-sm text-[#cc0000]">LOADING PRODUCTS...</p>
+            </div>
+          </div>
+        ) : productsError ? (
+          <div className="flex justify-center items-center py-16">
+            <div className="bg-white border-4 border-[#cc0000] pixel-border p-8 text-center">
+              <p className="text-[#cc0000] mb-4">⚠️ {productsError}</p>
+              <button
+                onClick={() => window.location.reload()}
+                className="pixel-button bg-[#cc0000] text-white px-6 py-3 text-xs"
+              >
+                REFRESH PAGE
               </button>
             </div>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+            {products.map((product) => (
+              <div
+                key={product.id}
+                className="bg-white border-4 border-[#1a2744] p-6 pixel-border hover:translate-y-[-8px] hover:shadow-[12px_12px_0px_rgba(26,39,68,1)] transition-all duration-300 group cursor-pointer"
+              >
+                <div className="mb-4 h-48 flex items-center justify-center bg-white relative overflow-hidden border-2 border-[#1a2744]">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="object-contain w-full h-[180px] max-w-full relative z-10 group-hover:scale-110 transition-transform duration-300"
+                    style={{ imageRendering: 'pixelated' }}
+                  />
+                </div>
+                <h4 className="text-base text-[#cc0000] mb-4 text-center group-hover:animate-pulse break-words">
+                  {product.name}
+                </h4>
+                <div className="space-y-2 text-xs mb-6 overflow-hidden">
+                  <div className="border-b-2 border-dashed border-[#1a2744] pb-2">
+                    <p className="text-[#cc0000] mb-1 font-bold">COLOR:</p>
+                    <p className="break-words leading-relaxed">{product.color}</p>
+                  </div>
+                  <div className="border-b-2 border-dashed border-[#1a2744] pb-2">
+                    <p className="text-[#cc0000] mb-1 font-bold">SWITCHES:</p>
+                    <p className="break-words leading-relaxed">{product.switches}</p>
+                  </div>
+                  <div className="border-b-2 border-dashed border-[#1a2744] pb-2">
+                    <p className="text-[#cc0000] mb-1 font-bold">LIGHTS:</p>
+                    <p className="break-words leading-relaxed">{product.lights}</p>
+                  </div>
+                </div>
+                <div className="text-center mb-4">
+                  <div className="text-2xl text-[#cc0000] font-bold group-hover:scale-110 transition-transform duration-300 inline-block">
+                    {product.price}
+                  </div>
+                </div>
+                <button 
+                  onClick={() => addToCart({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    priceValue: product.priceValue,
+                    image: product.image,
+                    color: product.color,
+                    switches: product.switches,
+                    lights: product.lights
+                  })}
+                  className="pixel-button bg-[#cc0000] text-white px-6 py-3 text-xs w-full group-hover:bg-[#1a2744] transition-colors duration-300"
+                >
+                  ADD TO CART
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Specs Section */}

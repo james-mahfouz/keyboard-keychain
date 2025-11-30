@@ -86,3 +86,17 @@ export const orders = sqliteTable('orders', {
   createdAt: text('created_at').notNull(),
   updatedAt: text('updated_at').notNull(),
 });
+
+// Products table for mechanical keyboard keychain e-commerce store
+export const products = sqliteTable('products', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  name: text('name').notNull(),
+  price: text('price').notNull(),
+  priceValue: integer('price_value').notNull(),
+  image: text('image').notNull(),
+  color: text('color').notNull(),
+  switches: text('switches').notNull(),
+  lights: text('lights').notNull(),
+  createdAt: text('created_at').notNull(),
+  updatedAt: text('updated_at').notNull(),
+});
