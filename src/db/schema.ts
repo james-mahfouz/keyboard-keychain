@@ -66,3 +66,23 @@ export const verification = sqliteTable("verification", {
     () => new Date(),
   ),
 });
+
+// Orders table for mechanical keyboard keychain e-commerce store
+export const orders = sqliteTable('orders', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  orderNumber: text('order_number').notNull().unique(),
+  customerName: text('customer_name').notNull(),
+  customerEmail: text('customer_email').notNull(),
+  customerPhone: text('customer_phone').notNull(),
+  shippingAddress: text('shipping_address').notNull(),
+  shippingCity: text('shipping_city').notNull(),
+  shippingZipCode: text('shipping_zip_code').notNull(),
+  orderNotes: text('order_notes'),
+  items: text('items', { mode: 'json' }).notNull(),
+  totalAmount: text('total_amount').notNull(),
+  totalItems: integer('total_items').notNull(),
+  paymentMethod: text('payment_method').notNull().default('Cash on Delivery'),
+  orderStatus: text('order_status').notNull().default('pending'),
+  createdAt: text('created_at').notNull(),
+  updatedAt: text('updated_at').notNull(),
+});

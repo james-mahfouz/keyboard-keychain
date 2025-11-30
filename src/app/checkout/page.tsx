@@ -64,27 +64,68 @@ export default function CheckoutPage() {
       return;
     }
 
-    // Simulate order submission
-    setTimeout(() => {
-      toast.success('🎉 Order placed successfully!', {
-        description: 'You will receive a confirmation email shortly.',
+    try {
+      const token = localStorage.getItem("bearer_token");
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      // Submit order to database
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          customerName: formData.name,
+          customerEmail: formData.email,
+          customerPhone: formData.phone,
+          shippingAddress: formData.address,
+          shippingCity: formData.city,
+          shippingZipCode: formData.zipCode,
+          orderNotes: formData.notes || null,
+          items: cart.map(item => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            priceValue: item.priceValue,
+            quantity: item.quantity,
+            image: item.image,
+            color: item.color,
+            switches: item.switches,
+            lights: item.lights
+          })),
+          totalAmount: totalPrice.toFixed(2),
+          totalItems: totalItems,
+          paymentMethod: 'Cash on Delivery'
+        })
       });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to place order');
+      }
+
+      toast.success('🎉 Order placed successfully!', {
+        description: `Order #${data.orderNumber} confirmed!`,
+      });
+
       clearCart();
-      router.push('/order-confirmation');
+      router.push(`/order-confirmation?orderNumber=${data.orderNumber}`);
+    } catch (error) {
+      console.error('Order submission error:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to place order. Please try again.');
+    } finally {
       setIsSubmitting(false);
-    }, 2000);
+    }
   };
 
   return (
     <div className="relative min-h-screen bg-white text-[#1a2744]">
       <PixelBackground />
-
-      <style jsx global>{`
-        @keyframes snowfall {
-          0% { transform: translateY(-20px) rotate(0deg); }
-          100% { transform: translateY(100vh) rotate(360deg); }
-        }
-      `}</style>
 
       {/* Header */}
       <header className="relative z-10 border-b-4 border-[#1a2744] bg-white">
