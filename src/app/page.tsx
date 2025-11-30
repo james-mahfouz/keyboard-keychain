@@ -170,8 +170,8 @@ export default function Home() {
               key={index}
               className="bg-white border-4 border-[#1a2744] p-6 pixel-border hover:translate-y-1 transition-transform">
 
-                <h4 className="text-[#cc0000] mb-4 !w-[212px] !h-14 !text-[15px]">{feature.title}</h4>
-                <p className="text-xs leading-relaxed !w-[174px] !h-[84px]">{feature.desc}</p>
+                <h4 className="text-[#cc0000] mb-4 text-sm md:text-base">{feature.title}</h4>
+                <p className="text-xs leading-relaxed">{feature.desc}</p>
               </div>
             )}
           </div>
@@ -231,23 +231,23 @@ export default function Home() {
                 <img
                 src={product.image}
                 alt={product.name}
-                className="object-contain !w-full !h-[180px] !max-w-full relative z-10 group-hover:scale-110 transition-transform duration-300"
+                className="object-contain w-full h-[180px] max-w-full relative z-10 group-hover:scale-110 transition-transform duration-300"
                 style={{ imageRendering: 'pixelated' }} />
 
               </div>
-              <h4 className="text-lg text-[#cc0000] mb-4 text-center group-hover:animate-pulse">{product.name}</h4>
+              <h4 className="text-base text-[#cc0000] mb-4 text-center group-hover:animate-pulse break-words">{product.name}</h4>
               <div className="space-y-2 text-xs mb-6">
-                <p className="flex justify-between border-b-2 border-dashed border-[#1a2744] pb-1">
-                  <span className="text-[#cc0000]">COLOR:</span>
-                  <span>{product.color}</span>
+                <p className="flex justify-between gap-2 border-b-2 border-dashed border-[#1a2744] pb-1">
+                  <span className="text-[#cc0000] flex-shrink-0">COLOR:</span>
+                  <span className="text-right break-words">{product.color}</span>
                 </p>
-                <p className="flex justify-between border-b-2 border-dashed border-[#1a2744] pb-1">
-                  <span className="text-[#cc0000]">SWITCHES:</span>
-                  <span className="text-right">{product.switches}</span>
+                <p className="flex justify-between gap-2 border-b-2 border-dashed border-[#1a2744] pb-1">
+                  <span className="text-[#cc0000] flex-shrink-0">SWITCHES:</span>
+                  <span className="text-right break-words">{product.switches}</span>
                 </p>
-                <p className="flex justify-between border-b-2 border-dashed border-[#1a2744] pb-1">
-                  <span className="text-[#cc0000]">LIGHTS:</span>
-                  <span>{product.lights}</span>
+                <p className="flex justify-between gap-2 border-b-2 border-dashed border-[#1a2744] pb-1">
+                  <span className="text-[#cc0000] flex-shrink-0">LIGHTS:</span>
+                  <span className="text-right break-words">{product.lights}</span>
                 </p>
               </div>
               <div className="text-center mb-4">
@@ -295,7 +295,7 @@ export default function Home() {
               className="flex justify-between items-center border-b-2 border-dashed border-[#1a2744] pb-2 last:border-b-0">
 
                 <span className="text-sm text-[#cc0000]">{spec.label}</span>
-                <span className="text-sm text-right !whitespace-pre-line !whitespace-pre-line">{spec.value}</span>
+                <span className="text-sm text-right">{spec.value}</span>
               </div>
             )}
           </div>
@@ -391,7 +391,7 @@ export default function Home() {
               <a
                 key={social}
                 href="#"
-                className="text-xs hover:text-[#cc0000] transition-colors !whitespace-pre-line">
+                className="text-xs hover:text-[#cc0000] transition-colors">
 
                   {social}
                 </a>
