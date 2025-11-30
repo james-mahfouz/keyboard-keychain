@@ -3,6 +3,8 @@
 import { useParams, useRouter } from 'next/navigation'
 import PixelBackground from '@/components/PixelBackground'
 import { Button } from '@/components/ui/button'
+import { CartButton } from '@/components/CartButton'
+import { useCart } from '@/components/CartProvider'
 import { useEffect } from 'react'
 
 const products = [
@@ -10,6 +12,7 @@ const products = [
     id: 1,
     name: 'CLASSIC WASD',
     price: '$5.97',
+    priceValue: 5.97,
     color: 'Clear & Cream',
     switches: 'Light Sound (4 colors available)',
     lights: 'With & Without Lights',
@@ -26,6 +29,7 @@ const products = [
     id: 2,
     name: 'STEALTH EDITION',
     price: '$5.97',
+    priceValue: 5.97,
     color: 'Smoke & Black',
     switches: 'Light Sound (4 colors available)',
     lights: 'With & Without Lights',
@@ -42,6 +46,7 @@ const products = [
     id: 3,
     name: 'RGB GAMER',
     price: '$5.97',
+    priceValue: 5.97,
     color: 'Clear & Blue',
     switches: 'Clicky & Loud (4 colors available)',
     lights: 'With & Without Lights',
@@ -58,6 +63,7 @@ const products = [
     id: 4,
     name: 'CRYSTAL PRO',
     price: '$5.97',
+    priceValue: 5.97,
     color: 'Crystal Clear',
     switches: 'Light Sound (4 colors available)',
     lights: 'With & Without Lights',
@@ -75,6 +81,7 @@ const products = [
 export default function ProductPage() {
   const params = useParams()
   const router = useRouter()
+  const { addToCart } = useCart()
   const productId = parseInt(params.id as string)
   const product = products.find(p => p.id === productId)
 
@@ -135,12 +142,15 @@ export default function ProductPage() {
           >
             CLICK IT <span>🎄</span>
           </button>
-          <button 
-            onClick={() => router.push('/#products')}
-            className="text-xs md:text-sm hover:text-[#cc0000] transition-colors"
-          >
-            ← BACK TO PRODUCTS
-          </button>
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => router.push('/#products')}
+              className="text-xs md:text-sm hover:text-[#cc0000] transition-colors"
+            >
+              ← BACK TO PRODUCTS
+            </button>
+            <CartButton />
+          </div>
         </div>
       </header>
 
@@ -223,7 +233,18 @@ export default function ProductPage() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="pixel-button bg-[#cc0000] text-white px-12 py-6 text-lg">
+            <button 
+              onClick={() => addToCart({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                priceValue: product.priceValue,
+                image: product.image,
+                color: product.color,
+                switches: product.switches,
+                lights: product.lights
+              })}
+              className="pixel-button bg-[#cc0000] text-white px-12 py-6 text-lg">
               ADD TO CART - {product.price} 🎁
             </button>
             <button 

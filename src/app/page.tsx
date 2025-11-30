@@ -4,9 +4,12 @@ import PixelBackground from '@/components/PixelBackground';
 import KeychainDisplay from '@/components/KeychainDisplay';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { CartButton } from '@/components/CartButton';
+import { useCart } from '@/components/CartProvider';
 import { useState, useEffect } from 'react';
 
 export default function Home() {
+  const { addToCart } = useCart();
   const [gameScore, setGameScore] = useState(0);
   const [pressedKey, setPressedKey] = useState<string | null>(null);
   const [lightningFlash, setLightningFlash] = useState(false);
@@ -104,11 +107,14 @@ export default function Home() {
             <h1 className="text-xl md:text-2xl text-[#cc0000] animate-blink">CLICK IT</h1>
             <span className="text-lg">🎄</span>
           </div>
-          <nav className="flex gap-4">
-            <a href="#features" className="text-xs md:text-sm hover:text-[#cc0000] transition-colors">FEATURES</a>
-            <a href="#products" className="text-xs md:text-sm hover:text-[#cc0000] transition-colors">PRODUCTS</a>
-            <a href="#specs" className="text-xs md:text-sm hover:text-[#cc0000] transition-colors">SPECS</a>
-          </nav>
+          <div className="flex items-center gap-4">
+            <nav className="flex gap-4">
+              <a href="#features" className="text-xs md:text-sm hover:text-[#cc0000] transition-colors">FEATURES</a>
+              <a href="#products" className="text-xs md:text-sm hover:text-[#cc0000] transition-colors">PRODUCTS</a>
+              <a href="#specs" className="text-xs md:text-sm hover:text-[#cc0000] transition-colors">SPECS</a>
+            </nav>
+            <CartButton />
+          </div>
         </div>
       </header>
 
@@ -247,7 +253,18 @@ export default function Home() {
               <div className="text-center mb-4">
                 <div className="text-2xl text-[#cc0000] font-bold group-hover:scale-110 transition-transform duration-300 inline-block">{product.price}</div>
               </div>
-              <button className="pixel-button bg-[#cc0000] text-white px-6 py-3 text-xs w-full group-hover:bg-[#1a2744] transition-colors duration-300">
+              <button 
+                onClick={() => addToCart({
+                  id: product.id,
+                  name: product.name,
+                  price: product.price,
+                  priceValue: 5.97,
+                  image: product.image,
+                  color: product.color,
+                  switches: product.switches,
+                  lights: product.lights
+                })}
+                className="pixel-button bg-[#cc0000] text-white px-6 py-3 text-xs w-full group-hover:bg-[#1a2744] transition-colors duration-300">
                 ADD TO CART
               </button>
             </div>
