@@ -34,3 +34,20 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Deploy with Docker
+
+1) Copy `.env.example` to `.env` and fill in required values (Turso creds, Better Auth secret, site URL).  
+2) Build the production image:
+
+```bash
+docker build -t retro-keychain .
+```
+
+3) Run the container, passing your env file:
+
+```bash
+docker run --env-file .env -p 3000:3000 retro-keychain
+```
+
+The app will start on port 3000 using `npm start` and will connect to the Turso database you configure. Make sure your database is migrated (`drizzle` migrations) before running the container.
