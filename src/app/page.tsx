@@ -236,19 +236,19 @@ export default function Home() {
 
               </div>
               <h4 className="text-base text-[#cc0000] mb-4 text-center group-hover:animate-pulse break-words">{product.name}</h4>
-              <div className="space-y-2 text-xs mb-6">
-                <p className="flex justify-between gap-2 border-b-2 border-dashed border-[#1a2744] pb-1">
-                  <span className="text-[#cc0000] flex-shrink-0">COLOR:</span>
-                  <span className="text-right break-words">{product.color}</span>
-                </p>
-                <p className="flex justify-between gap-2 border-b-2 border-dashed border-[#1a2744] pb-1">
-                  <span className="text-[#cc0000] flex-shrink-0">SWITCHES:</span>
-                  <span className="text-right break-words">{product.switches}</span>
-                </p>
-                <p className="flex justify-between gap-2 border-b-2 border-dashed border-[#1a2744] pb-1">
-                  <span className="text-[#cc0000] flex-shrink-0">LIGHTS:</span>
-                  <span className="text-right break-words">{product.lights}</span>
-                </p>
+              <div className="space-y-2 text-xs mb-6 overflow-hidden">
+                <div className="border-b-2 border-dashed border-[#1a2744] pb-2">
+                  <p className="text-[#cc0000] mb-1 font-bold">COLOR:</p>
+                  <p className="break-words leading-relaxed">{product.color}</p>
+                </div>
+                <div className="border-b-2 border-dashed border-[#1a2744] pb-2">
+                  <p className="text-[#cc0000] mb-1 font-bold">SWITCHES:</p>
+                  <p className="break-words leading-relaxed">{product.switches}</p>
+                </div>
+                <div className="border-b-2 border-dashed border-[#1a2744] pb-2">
+                  <p className="text-[#cc0000] mb-1 font-bold">LIGHTS:</p>
+                  <p className="break-words leading-relaxed">{product.lights}</p>
+                </div>
               </div>
               <div className="text-center mb-4">
                 <div className="text-2xl text-[#cc0000] font-bold group-hover:scale-110 transition-transform duration-300 inline-block">{product.price}</div>
